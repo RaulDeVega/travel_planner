@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="/static/css/login.css">
+
+</head>
+<body>
+
+  <main>
+    <form id="formulario">
+      <h1>Crea un viaje</h1>
+
+      <div class="form-group">
+        <label for="nombre" class="form-label">Nombre del viaje</label>
+        <input type="text" id="nombre_viaje" name="nombre_viaje" class="form-input"
+               placeholder="nombre_viaje" required>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea id="descripcion" name="descripcion" class="form-input" 
+            placeholder="Escribe tu descripción..." rows="4"></textarea>
+      </div>
+
+      <p id="mensaje" class="mensaje" role="alert" aria-live="polite"></p>
+
+      <button type="submit" id="boton">Entrar</button>
+    </form>
+  </main>
+
+  <script>
+
+  </script>
+</body>
+</html>

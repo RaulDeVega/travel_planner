@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tus Viajes</title>
+  
+  <style>
+    /* Reset básico para quitar márgenes por defecto */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    /* BARRA SUPERIOR (HEADER) */
+    .cabecera {
+      display: flex;
+      justify-content: space-between; /* Separa los elementos a izq, centro y der */
+      align-items: center; /* Los centra verticalmente */
+      padding: 15px 20px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave abajo */
+    }
+
+    .logo img {
+      height: 40px; /* Ajusta el tamaño de tu logo */
+    }
+
+    .buscador input {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      width: 250px;
+      outline: none;
+    }
+
+    .ajustes img {
+      height: 30px; /* Ajusta el tamaño de tu icono */
+      cursor: pointer;
+    }
+
+    /* BANNER DE TUS VIAJES */
+    .banner-viajes {
+      background-color: #e9ecef;
+      padding: 30px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* BOTÓN FLOTANTE (+) */
+    .boton-flotante {
+      position: fixed; /* Lo fija en la pantalla aunque hagas scroll */
+      bottom: 30px;
+      right: 30px;
+      background-color: #007bff;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%; /* Lo hace redondo */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 35px;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background-color 0.3s;
+    }
+
+    .boton-flotante:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <header class="cabecera">
+    <!-- Izquierda: Logo -->
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+
+    <!-- Centro: Buscador -->
+    <div class="buscador">
+      <input type="text" placeholder="Buscar viajes...">
+    </div>
+
+    <!-- Derecha: Icono de ajustes/parámetros -->
+    <div class="ajustes">
+      <a href="parametros.html">
+        <img src="icono-ajustes.png" alt="Ajustes">
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- BANNER TUS VIAJES -->
+    <section class="banner-viajes">
+      <h1>Tus viajes</h1>
+    </section>
+
+    <!-- Contenedor vacío donde irán las tarjetas de los viajes -->
+    <section id="lista-viajes" style="padding: 20px;">
+        <p id="mensaje" class="mensaje" role="alert" aria-live="polite"></p>
+        <!-- Aquí añadirás los viajes en el futuro -->
+    </section>
+  </main>
+
+  <!-- BOTÓN FLOTANTE ABAJO A LA DERECHA -->
+  <a href="crear-viaje.html" class="boton-flotante" title="Crear nuevo viaje">+</a>
+
+  <script>
+    // Aquí irá la lógica para cargar los viajes desde tu base de datos
+  </script>
+</body>
+</html>
