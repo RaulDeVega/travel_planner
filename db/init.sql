@@ -9,6 +9,7 @@
 ----------------- TODO: Decidir longitud maxima de datos
 CREATE TABLE Usuario (
     idUsuario SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
     nombre VARCHAR(255) NOT NULL,
     apellidos VARCHAR(255) NOT NULL,
     contraseña VARCHAR(255) NOT NULL, -- Aquí guardaremos el hash de la contraseña
