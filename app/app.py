@@ -1,18 +1,14 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-
-# Carpeta donde se guardarán las fotos (asegúrate de que exista en tu proyecto)
-UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'} # TODO: ¿Usaremos gif?
 
 # Obtiene la ruta absoluta de la carpeta donde está 'app.py'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Obtiene la ruta absoluta de la carpeta donde están las imagenes
-UPLOAD_FOLDER = os.path.join(BASE_DIR, '../static/img')
+UPLOAD_FOLDER = os.path.join(BASE_DIR, '../static/uploads')
 
 # Asegurar que la carpeta exista físicamente al arrancar la app
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -25,7 +21,7 @@ app = Flask(__name__,
 # TODO: asegurarse de que en el docker se pone el mismo nombre de variable para la ruta de init.sql
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 
-    'postgresql://tu_usuario:tu_password@localhost/tu_base_de_datos'
+    'postgresql://viajes_user:viajes_password@db:5432/viajes_db'
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -38,7 +34,8 @@ db = SQLAlchemy(app)
 # TODO: Cambiar si se cambia init.sql
 class Usuario(db.Model):
     __tablename__ = 'usuario'
-    idUsuario = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column('idusuario',db.Integer, primary_key=True)
+    username = db.Column(db.String(255), nullable=False)
     nombre = db.Column(db.String(255), nullable=False)
     apellidos = db.Column(db.String(255), nullable=False)
     contraseña = db.Column(db.String(255), nullable=False)
@@ -62,6 +59,32 @@ class RolUsuario(db.Model):
     idUsuario = db.Column(db.Integer, db.ForeignKey('usuario.idUsuario', ondelete='CASCADE'), primary_key=True)
     idRol = db.Column(db.Integer, db.ForeignKey('rol.idRol', ondelete='CASCADE'), nullable=False)
 
+# ==========================================
+# RUTAS PARAS SERVIR LAS VISTAS HTML
+# ==========================================
+
+@app.route('/')
+def home():
+    # Redirige al login por defecto
+    return redirect(url_for('login_page'))
+
+@app.route('/login')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/register')
+def register_page():
+    return render_template('crear_cuenta.html')
+
+@app.route('/main')
+def main_page():
+    return render_template('pagina_principal.html')
+
+@app.route('/crear-viaje')
+def create_trip_page():
+    return render_template('crear_viaje.html')
+
+
 
 # ==========================================
 # RUTAS DE LA API CON FLASK-SQLALCHEMY
@@ -75,12 +98,12 @@ def archivo_permitido(nombre_archivo):
 def register_user():
     nombre = request.form.get('nombre')
     apellidos = request.form.get('apellidos')
-    correo = request.form.get('correo')
-    contraseña = request.form.get('contraseña')
+    username = request.form.get('nombre_de_usuario')
+    correo = request.form.get('email')
+    contraseña = request.form.get('password')
 
-    # Comprobar que ningún campo obligatorio esté vacío
     if not nombre or not apellidos or not correo or not contraseña:
-        return jsonify({"error": "Todos los campos (nombre, apellidos, correo y contraseña) son obligatorios"}), 400
+        return jsonify({"error": "Todos los campos son obligatorios"}), 400
     
     # Manejo de la foto de perfil
     foto = request.files.get('foto_perfil')
@@ -93,11 +116,15 @@ def register_user():
         foto.save(ruta_guardado)
 
     try:
+
+        pass_hash = generate_password_hash(contraseña)
+
         nuevo_usuario = Usuario(
+            username=username,
             nombre=nombre,
             apellidos=apellidos,
             correo=correo,
-            contraseña=contraseña,
+            contraseña=pass_hash,
             foto_perfil=nombre_foto # En la BD solo guardamos el nombre del archivo
         )
         db.session.add(nuevo_usuario)
@@ -114,8 +141,8 @@ def register_user():
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    correo = data.get('correo')
-    contraseña = data.get('contraseña')
+    correo = data.get('email')
+    contraseña = data.get('password')
 
     # Validar que se envíen ambos campos
     if not correo or not contraseña:
@@ -219,4 +246,5 @@ def get_user_trips(id_usuario):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True) # Escucha en 0.0.0.0

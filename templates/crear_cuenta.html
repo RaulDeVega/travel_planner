@@ -75,7 +75,7 @@
     // ==========================================
     // 2. LÓGICA ORIGINAL DEL FORMULARIO (LOGIN)
     // ==========================================
-    const API_URL = "/api/login"; // TODO: Cambiar por la URL del servidor
+const API_URL = "/api/register";
     const formulario = document.getElementById("formulario");
     const mensaje = document.getElementById("mensaje");
     const boton = document.getElementById("boton");
@@ -84,42 +84,35 @@
       event.preventDefault();
       mensaje.textContent = "";
 
-      // Datos pedidos al usuario
-      const email = formulario.email.value.trim();
-      const password = formulario.password.value;
-
-      if (!email || !password) {
-        mensaje.textContent = "Introduce tu correo y tu contraseña.";
-        return;
-      }
+      // Usar FormData recopila automáticamente los inputs y el archivo subido
+      const formData = new FormData(formulario);
 
       boton.disabled = true;
-      boton.textContent = "Entrando...";
+      boton.textContent = "Registrando...";
 
       try {
-        // Envío de los datos como JSON
+        // Al enviar FormData con fetch, NO se pone header Content-Type (el navegador lo añade con el boundary)
         const response = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
+          body: formData
         });
 
-        // El servidor responde también con JSON
         const data = await response.json();
 
-        // Error
         if (!response.ok) {
-          mensaje.textContent = data.error || "No se pudo iniciar sesión.";
+          mensaje.textContent = data.error || "No se pudo registrar la cuenta.";
           return;
         }
 
-        // Ejemplo: guardar el token y redirigir
-        window.location.href = "/dashboard.html";
+        // Registro exitoso: redirige al inicio de sesión
+        alert("Cuenta creada con éxito. Inicia sesión para continuar.");
+        window.location.href = "/login";
+
       } catch (error) {
         mensaje.textContent = "No se pudo conectar con el servidor.";
       } finally {
         boton.disabled = false;
-        boton.textContent = "Entrar";
+        boton.textContent = "Registrarse";
       }
     });
   </script>

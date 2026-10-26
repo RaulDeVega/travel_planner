@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: viajes_db
+    restart: always
+    environment:
+      POSTGRES_USER: viajes_user
+      POSTGRES_PASSWORD: viajes_password
+      POSTGRES_DB: viajes_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: viajes_web
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://viajes_user:viajes_password@db:5432/viajes_db
+      FLASK_DEBUG: "1"
+    ports:
+      - "5000:5000"
+    volumes:
+          - ./app:/code/app
+          - ./templates:/code/templates
+          - ./static:/code/static
+          - uploads_data:/code/static/uploads
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+  uploads_data: 
