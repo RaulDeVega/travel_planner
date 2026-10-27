@@ -3,7 +3,7 @@
 <head> 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Iniciar sesión</title>
+  <title>Crear Viaje</title>
   <link rel="stylesheet" href="/static/css/login.css">
 
 </head>
@@ -25,13 +25,57 @@
             placeholder="Escribe tu descripción..." rows="4"></textarea>
       </div>
 
+          <!-- Contenedor de la foto de perfil -->
+      <div class="contenedor-foto-viaje" style="text-align: left; margin-bottom: 20px;">
+        <input type="file" id="subir-foto" name="foto_viaje" accept="image/*" style="display: none;">
+        <span style="display: block; margin-top: 5px;">Subir foto</span>
+        <label for="subir-foto" class="boton-imagen" style="cursor: pointer;">
+            <figure class="avatar" style="margin: 0;">
+                <img src="fotoDePerfil.jpeg" id="vista-previa" style="width: 150px; height: auto;">
+            </figure>
+            
+        </label>
+      </div>
+
       <p id="mensaje" class="mensaje" role="alert" aria-live="polite"></p>
 
+      <div style="margin-bottom: 20px;">
+      <input type="text" id="nombre-input" placeholder="Escribe un nombre..." style="padding: 5px;">
+      <button onclick="agregarPersona()" style="padding: 5px 10px; cursor: pointer;">Añadir</button>
+</div>
+
+<!-- 2. La lista donde irán apareciendo los nombres -->
+<ul id="lista-personas" style="list-style-type: disc; padding-left: 20px;">
+    <!-- Los nombres se irán añadiendo aquí -->
+</ul>
       <button type="submit" id="boton">Entrar</button>
     </form>
   </main>
 
   <script>
+    function agregarPersona() {
+        // Obtenemos el campo de texto y la lista
+        const input = document.getElementById('nombre-input');
+        const lista = document.getElementById('lista-personas');
+        
+        // Obtenemos el texto que escribió el usuario (y le quitamos espacios extra)
+        const nombre = input.value.trim();
+
+        // Comprobamos que no esté vacío
+        if (nombre !== "") {
+            // Creamos un nuevo elemento de lista (<li>)
+            const nuevoElemento = document.createElement('li');
+            nuevoElemento.textContent = nombre; // Le ponemos el nombre al <li>
+
+            // Añadimos ese nuevo <li> a nuestra lista <ul>
+            lista.appendChild(nuevoElemento);
+
+            // Vaciamos el campo de texto para poder escribir el siguiente
+            input.value = "";
+        } else {
+            alert("Por favor, escribe un nombre primero.");
+        }
+    }
 
   </script>
 </body>
